@@ -1,0 +1,45 @@
+<h1>Send test Mail using API key for <%= current_user.api_keys.find_by(type_api:'mail').name.humanize %></h1>
+<% if current_user.api_keys.find_by(type_api:'mail').name.eql? 'mandrill' %>
+  <p>Find me in app/views/email/send_mail.html.erb</p>
+
+  <%= form_tag("/email/sending", method: "post") do %>
+    <br>
+    	<%= label_tag(:from_email, "From Email:") %>
+    	<%= text_field_tag(:from_email) %>
+    <br>
+    	<%= label_tag(:to_email, "To Email:") %>
+    	<%= text_field_tag(:to_email) %>
+    <br>
+    	<%= label_tag(:content_html, "Code html:") %>
+    	<%= text_area_tag(:content_html, "Puts Html code", size: "24x6") %>
+    <%= submit_tag("Send Mail") %>
+
+    <% end %>
+
+<% else %>
+  <%= form_tag("/email/sending", method: "post") do %>
+    <%= hidden_field_tag(:type, "regular") %>
+    <%= label_tag(:title, "Select user list:") %>
+    <br>
+    <select name="list_id" id="city_id">
+    <% @list.each do |list| %>
+       <option value=<%= list["id"] %>><%= list["name"] %></option> 
+    <% end %>
+    </select>
+    <br>
+      <%= label_tag(:subject, "Subject:") %>
+      <%= text_field_tag(:subject) %>
+    <br>
+      <%= label_tag(:from_email, "From Email:") %>
+      <%= text_field_tag(:from_email) %>
+    <br>
+      <%= label_tag(:from_name, "From Name:") %>
+      <%= text_field_tag(:from_name) %>
+    <br>
+      <%= label_tag(:content, "Code html:") %>
+      <%= text_area_tag(:content, "Puts Html code", size: "24x6") %>
+    <br><br>
+    <%= submit_tag("Send Mail") %>
+  <% end %>
+<% end%>
+<%= link_to 'Back', api_keys_path %>

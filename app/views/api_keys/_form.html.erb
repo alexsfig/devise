@@ -1,0 +1,29 @@
+<%= form_for(@api_key) do |f| %>
+  <% if @api_key.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@api_key.errors.count, "error") %> <br>prohibited this api_key from being saved:</h2>
+
+      <ul>
+      <% @api_key.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <%= f.hidden_field :user_id, value: current_user.id%>
+  <%= f.hidden_field :type_api, value: "mail"%>
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= select(:api_key, :name, [['Mandrill service', 'mandrill'], ['MailChimp service', 'mail_chimp']]) %>
+  </div>
+  <div>
+    
+  </div>
+  <div class="field">
+    <%= f.label :api_key %><br>
+    <%= f.text_field :api_key %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
