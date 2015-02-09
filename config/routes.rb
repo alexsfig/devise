@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
   get 'email/send_mail'
   post 'email/sending'
-
+  get 'email/new_mail'
+  post 'email/create_mail'
   resources :api_keys
 
 

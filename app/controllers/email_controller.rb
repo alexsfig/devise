@@ -4,9 +4,28 @@ class EmailController < ApplicationController
 	include MandrillMailer
 	include MailChimpMailer
 
+	def new_mail
+		if current_user.api_keys.find_by(type_api:'mail').nil? or current_user.api_keys.find_by(type_api:'mail').name.eql? 'mandrill'
+			redirect_to '/api_keys'
+		else
+			@list = mcget_all_list	
+		end
+	end
+
+	def create_mail
+		if params[:email].empty?
+			flash[:error] = "Email is empty"
+		elsif /\b[A-Z0-9._%a-z\-]+@(?:[A-Z0-9a-z\-]+\.)+[A-Za-z]{2,4}\z/.match(params[:email]).nil?
+			flash[:error] = "Invalid Mail"
+		else
+			mcsubscribe_list(params[:list_id], params[:email])
+		end
+		redirect_to '/email/new_mail'
+	end
+
 	def send_mail
 		if current_user.api_keys.find_by(type_api:'mail').nil?
-			redirect_to '/api_keys/new'
+			redirect_to '/api_keys'
 		end
 		if current_user.api_keys.find_by(type_api:'mail').name.eql? 'mail_chimp'
 			@list = mcget_all_list
@@ -57,5 +76,7 @@ class EmailController < ApplicationController
 		end
 
 	end
+
+	
 
 end

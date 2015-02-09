@@ -1,0 +1,24 @@
+<h1>Add new mail to Mailchimp List</h1>
+<% flash.each do |name, msg| -%>
+      <%= content_tag :div, msg, class: name %>
+    <% end -%>
+<%= form_tag("/email/create_mail", method: "post") do %>
+    <%= hidden_field_tag(:type, "regular") %>
+    <%= label_tag(:title, "Select user list:") %>
+    <br>
+    <select name="list_id" id="city_id">
+    <% @list.each do |list| %>
+       <option value=<%= list["id"] %>><%= list["name"] %></option> 
+    <% end %>
+    </select>
+    <br>
+    <br>
+    <br>
+      <%= label_tag(:email, "Email user") %>
+      <%= text_field_tag(:email) %>
+    <br>
+    <br><br>
+    <%= submit_tag("Send Mail") %>
+<% end %>
+
+<%= link_to 'Back', email_send_mail_path %>

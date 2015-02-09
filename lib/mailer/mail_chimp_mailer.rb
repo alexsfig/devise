@@ -154,21 +154,23 @@ module MailChimpMailer
   # @param [String] email Email client
   # @param [Hash] merge_vars Optional merges for the email (FNAME, LNAME, etc.) or any that you create manually, example {:FNAME => "FirstName2", :LNAME => "LastName2", :MMERGE3 => "additional var"}
   # @return [Mailchimp::Lists.subscribe]
-  def mcsubscribe_list(list_id, email, merge_vars)
+  def mcsubscribe_list(list_id, email)
     # list_id = 'a38ec3df9c'
     # email = "alex882204@gmail.com"
     begin
-      setup_mcapi.lists.subscribe(list_id, {'email' => email}, merge_vars)
-      # flash[:success] = "#{email} subscribed successfully"
+      setup_mcapi.lists.subscribe(list_id, {'email' => email})
+      flash[:success] = "#{email} subscribed successfully"
       puts "#{email} subscribed successfully"
     rescue Mailchimp::ListAlreadySubscribedError
-      # flash[:error] = "#{email} is already subscribed to the list"
+      flash[:error] = "#{email} is already subscribed to the list"
       puts "#{email} is already subscribed to the list"
+    rescue Mailchimp::InvalidEmailError
+      flash[:error] = "#{email} is invalid"
+      puts "#{email} is invalid"
     rescue Mailchimp::ListDoesNotExistError
-      # flash[:error] = "The list could not be found"
+      flash[:error] = "The list could not be found"
       puts "The list could not be found"
       # redirect_to "/lists/"
-      return
     rescue Mailchimp::Error => ex
       if ex.message
         # flash[:error] = ex.message
