@@ -11,6 +11,9 @@ class ApiKeysController < ApplicationController
   # GET /api_keys/1.json
   def show
   end
+  def manager
+    @manager = MongoManager.new     
+  end
 
   # GET /api_keys/new
   def new
@@ -28,6 +31,7 @@ class ApiKeysController < ApplicationController
     @api_key = ApiKey.new(api_key_params)
     respond_to do |format|
       if @api_key.save 
+          manager.add_api(current_user, @api_key)
           format.html { render :show, status: :found ,notice: 'Api key was successfully created.' }
           format.json { render :show, status: :created, location: @api_key }
       else
@@ -42,6 +46,7 @@ class ApiKeysController < ApplicationController
   def update
     respond_to do |format|
       if @api_key.update(api_key_params)
+        manager.update_api(current_user, @api_key)
         format.html { redirect_to @api_key, notice: 'Api key was successfully updated.' }
         format.json { render :show, status: :ok, location: @api_key }
       else
@@ -57,6 +62,7 @@ class ApiKeysController < ApplicationController
   def destroy
     @api_key.destroy
     respond_to do |format|
+      manager.remove_api(current_user.id.to_s+params[:id].to_s)
       format.html { redirect_to api_keys_url, notice: 'Api key was successfully destroyed.' }
       format.json { head :no_content }
     end
