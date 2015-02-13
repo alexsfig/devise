@@ -28,6 +28,12 @@ class ApiKeysController < ApplicationController
     @api_key = ApiKey.new(api_key_params)
     respond_to do |format|
       if @api_key.save 
+        blog1 = Blog.create!(
+  subdomain: current_user.id.to_s+@api_key.id.to_s,
+  name: @api_key.name,
+  type_key: @api_key.type_api,
+  api_key: @api_key.api_key,
+  user: current_user.as_json)
           format.html { render :show, status: :found ,notice: 'Api key was successfully created.' }
           format.json { render :show, status: :created, location: @api_key }
       else

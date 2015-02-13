@@ -32,6 +32,10 @@ gem 'spring',        group: :development
 gem 'devise'
 gem "binding_of_caller"
 
+
+gem "cequel"
+
+
 gem 'pry-rescue'
 group :development, :test do
   gem 'factory_girl_rails'
