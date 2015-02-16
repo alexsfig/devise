@@ -28,11 +28,18 @@ class ApiKeysController < ApplicationController
     @api_key = ApiKey.new(api_key_params)
     respond_to do |format|
       if @api_key.save 
-          format.html { render :show, status: :found ,notice: 'Api key was successfully created.' }
-          format.json { render :show, status: :created, location: @api_key }
+        dynamo = DynamoManager.new
+        data = Hash.new
+        data['user_id'] = current_user.id
+        data['id'] = current_user.id.to_s + ((@api_key.eql? 'mandril') ? "1" : "2")
+        data['api_key'] = @api_key.api_key
+        data['name'] = @api_key.name
+        dynamo.insert data
+        format.html { render :show, status: :found ,notice: 'Api key was successfully created.' }
+        format.json { render :show, status: :created, location: @api_key }
       else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @api_key.errors, status: :unprocessable_entity }
+        format.html { render :new, status: :unprocessable_entity }
+        format.json { render json: @api_key.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -42,6 +49,14 @@ class ApiKeysController < ApplicationController
   def update
     respond_to do |format|
       if @api_key.update(api_key_params)
+        dynamo = DynamoManager.new
+        data = Hash.new
+        data['id'] = current_user.id.to_s + ((@api_key.eql? 'mandril') ? "1" : "2")
+        data['api_key'] = @api_key.api_key
+        data['name'] = @api_key.name
+        dynamo.update data
+        
+
         format.html { redirect_to @api_key, notice: 'Api key was successfully updated.' }
         format.json { render :show, status: :ok, location: @api_key }
       else
@@ -57,6 +72,9 @@ class ApiKeysController < ApplicationController
   def destroy
     @api_key.destroy
     respond_to do |format|
+      dynamo = DynamoManager.new
+      id = current_user.id.to_s + ((@api_key.eql? 'mandril') ? "1" : "2")
+      dynamo.delete id
       format.html { redirect_to api_keys_url, notice: 'Api key was successfully destroyed.' }
       format.json { head :no_content }
     end
@@ -72,4 +90,4 @@ class ApiKeysController < ApplicationController
     def api_key_params
       params.require(:api_key).permit(:user_id, :name, :type_api, :api_key)
     end
-end
+  end

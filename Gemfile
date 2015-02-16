@@ -32,8 +32,13 @@ gem 'spring',        group: :development
 gem 'devise'
 gem "binding_of_caller"
 
+
+gem 'aws-sdk', '~> 2'
+
+gem 'dynamoid'
 gem 'pry-rescue'
 group :development, :test do
+  gem "awesome_print"
   gem 'factory_girl_rails'
   gem 'rspec-rails', '~> 3.0'
   gem 'database_cleaner'
