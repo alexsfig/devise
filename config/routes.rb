@@ -1,17 +1,14 @@
 Rails.application.routes.draw do
-  get 'email/send_mail'
-  post 'email/sending'
-  get 'email/new_mail'
-  post 'email/create_mail'
-  resources :api_keys
-
+  resources :residents
+  post 'find_by' => 'residents#find_by_number'
+  post 'register' => 'residents#register'
 
   devise_for :users
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root 'api_keys#index'
+  root 'residents#index'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

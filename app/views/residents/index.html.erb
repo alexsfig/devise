@@ -1,0 +1,44 @@
+<h1>Listing residents</h1>
+<form action="/find_by" method="POST">
+    <div>
+      Busqueda por casa
+      <input type="text" id="house_number" name="house_number">
+    </div>
+    <div>
+      <button type="submit">Buscar</button>
+    </div>
+
+  </form>
+<table>
+  <thead>
+    <tr>
+      <th>Resident name</th>
+      <th>House number</th>
+      <th>Email</th>
+      <th>Telephone</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+  <form action="">
+    <div>
+      
+    </div>
+
+  </form>
+
+  <tbody>
+    <% @residents.each do |resident| %>
+      <tr>
+        <td><%= resident.resident_name %></td>
+        <td><%= resident.house_number %></td>
+        <td><%= resident.email %></td>
+        <td><%= resident.telephone %></td>
+        <td><%= link_to 'Show', resident %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Resident', new_resident_path %>
